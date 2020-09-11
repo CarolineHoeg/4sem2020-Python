@@ -81,11 +81,11 @@ def generate_students(no_students):
     classrooms = ['C-105', 'C-162', 'C-102', 'C-265']
     
     while len(students) < no_students:
-        no_courses = random.choice(range(5))
+        no_courses = random.choice(range(5)) + 1
         courses = []
         while len(courses) < no_courses:
             courses.append(Course(random.choice(course_names), 
-            random.choice(classrooms), random.choice(names), (random.choice(range(5)) * 10), random.choice(grades)))
+            random.choice(classrooms), random.choice(names), ((random.choice(range(5)) + 1) * 10), random.choice(grades)))
         student = Student(random.choice(names), random.choice(genders), DataSheet(courses), random.choice(image_urls))  
         students.append(student)
     return students
@@ -104,35 +104,33 @@ def write_students_to_csv(students, out='students.csv'):
         writer.writeheader()
         for student in students:
             courses = student.data_sheet.courses
-            if len(courses) > 0:
-                for course in student.data_sheet.courses:
-                    writer.writerow({'stud_name': student.name, 'course_name': course.name, 'teacher': course.teacher, 'ects': course.ECTS,
-                    'classroom': course.classroom, 'grade': course.grade, 'img_url': student.image_url})
-            else: 
-                writer.writerow({'stud_name': student.name, 'course_name': 'none', 'teacher': 'none', 'ects': 'none',
-                'classroom': 'none', 'grade': 'none', 'img_url': student.image_url})
+            for course in courses:
+                writer.writerow({'stud_name': student.name, 'course_name': course.name, 'teacher': course.teacher, 'ects': course.ECTS,
+                'classroom': course.classroom, 'grade': course.grade, 'img_url': student.image_url})
 
-students = generate_students(5)
-print(students)                          
-write_students_to_csv(students)
-
+# students = generate_students(5)
+# print(students)                          
+# write_students_to_csv(students)
 
 # 8
-def read_students_from_csv(csv_file='students.csv'):
+def read_students_from_csv(csv_file='students2.csv'):
     students = []
     with open(csv_file, 'r') as file_object:
         reader = csv.DictReader(file_object)
         student_name = ''
         courses = []
         for row in reader:
-            if row['stud_name'] == student_name:
-                courses.append(row['course_name'])
-            else:
+            if student_name == '':
                 student_name = row['stud_name']
+            if student_name == row['stud_name']:
+                courses.append(Course(row['course_name'], row['classroom'], row['teacher'], row['ects'], row['grade']))
+                student_name = row['stud_name']
+            else:
+                data_sheet = DataSheet(courses)
+                students.append(Student(student_name, row['gender'], data_sheet, row['img_url']))
                 courses = []
-                courses.append(row['course_name'])
-            #data_sheet = DataSheet(courses)
-            #students.append(Student('', '', data_sheet, ''))
+                courses.append(Course(row['course_name'], row['classroom'], row['teacher'], row['ects'], row['grade']))
+                student_name = row['stud_name']
     return students
 
 print(read_students_from_csv())
