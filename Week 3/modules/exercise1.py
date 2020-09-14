@@ -102,10 +102,6 @@ def write_students_to_csv(students, out='students.csv'):
                 writer.writerow({'stud_name': student.name, 'course_name': course.name, 'teacher': course.teacher, 'ects': course.ECTS,
                 'classroom': course.classroom, 'grade': course.grade, 'img_url': student.image_url})
 
-# students = generate_students(5)
-# print(students)                          
-# write_students_to_csv(students)
-
 # 8
 def read_students_from_csv(csv_file='students2.csv'):
     students = []
@@ -127,8 +123,6 @@ def read_students_from_csv(csv_file='students2.csv'):
                 student_name = row['stud_name']
     return students
 
-#print(read_students_from_csv())
-
 # 8.A
 def print_student(students):
     for student in students:
@@ -139,9 +133,5 @@ def sort_by_avg_grade(students):
     for student in sorted(students, key=Student.get_avg_grade, reverse=True):
         print('Name of student: {}. Average grade: {}'.format(student.name,student.get_avg_grade()))
 
-#students = generate_students(3)
-#sort_by_avg_grade(students)
-
-# 8.C
 
 
