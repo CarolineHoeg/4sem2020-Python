@@ -14,10 +14,7 @@ class Student():
     def get_avg_grade(self):
         """Gets average grade"""
         grades = self.data_sheet.get_grades_as_list()
-        if len(grades) > 0:
-            return sum(grades) / len(grades)
-        else:
-            return 'No grades yet'
+        return round((sum(grades) / len(grades)), 2)
 
     def __repr__(self):
         return 'Student(%r, %r, %r, %r)' % (self.name, self.gender, self.data_sheet, self.image_url)
@@ -35,10 +32,7 @@ class DataSheet():
 
     def get_grades_as_list(self):
         """Gets grades as list"""
-        lst = []
-        for course in self.courses:
-            lst.append(course.grade)
-        return lst
+        return [course.grade for course in self.courses]
 
     def __repr__(self):
         return 'Datasheet(%r)' % (self.courses)
@@ -133,7 +127,7 @@ def read_students_from_csv(csv_file='students2.csv'):
                 student_name = row['stud_name']
     return students
 
-print(read_students_from_csv())
+#print(read_students_from_csv())
 
 # 8.A
 def print_student(students):
@@ -141,6 +135,12 @@ def print_student(students):
         print('Name of student: %s. Image URL: %s. Average grade: %s' % (student.name, student.image_url, student.get_avg_grade()))
 
 # 8.B
+def sort_by_avg_grade(students):
+    for student in sorted(students, key=Student.get_avg_grade, reverse=True):
+        print('Name of student: {}. Average grade: {}'.format(student.name,student.get_avg_grade()))
+
+#students = generate_students(3)
+#sort_by_avg_grade(students)
 
 # 8.C
 
